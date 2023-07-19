@@ -71,9 +71,17 @@ async function scrapeCoursesDirectory() {
         const page = await browser.newPage();
         await page.goto(`https://www.skillshare.com/en/browse?sort=popular&time=all&page=${i}`, {timeout: 50000});
         // Wait for the courses to load and get the links
-        await page.waitForSelector('a.class-link');
-        const links = await page.$$eval('a.class-link', els => els.map(el => el.href));        
+       let links = [];
 
+        try {
+            await page.waitForSelector('a.class-link', { timeout: 10000 });
+            links = await page.$$eval('a.class-link', els => els.map(el => el.href));
+        }
+        catch (err) {
+            console.log("Error in Page ", i);
+            fs.appendFileSync('error_indexes.txt', i + ',');
+        }
+        
         // Navigate to the course page
         console.log(i);
         for (const link of links) {
@@ -84,8 +92,6 @@ async function scrapeCoursesDirectory() {
         }
         // Close the browser and return the scraped data
         await browser.close();
-        return courseDetails;
-
     }
 }
 
