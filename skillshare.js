@@ -66,7 +66,7 @@ async function scrapeCourseDetails(url) {
 
 async function scrapeCoursesDirectory() {
     const courseDetails = [];
-    for (let i = 83; i <= 1796; i++) {
+    for (let i = 1; i <= 1796; i++) {
         const browser = await puppeteer.launch({ headless: "new" }); // change headless to true to run in headless mode
         const page = await browser.newPage();
         await page.goto(`https://www.skillshare.com/en/browse?sort=popular&time=all&page=${i}`, {timeout: 50000});
